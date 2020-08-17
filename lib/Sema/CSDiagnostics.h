@@ -2248,20 +2248,6 @@ private:
              const FunctionArgApplyInfo &info) const;
 };
 
-/// Diagnose situations where we have a key path with no components.
-///
-/// \code
-/// let _ : KeyPath<A, B> = \A
-/// \endcode
-class InvalidEmptyKeyPathFailure final : public FailureDiagnostic {
-public:
-  InvalidEmptyKeyPathFailure(const Solution &solution,
-                             ConstraintLocator *locator)
-      : FailureDiagnostic(solution, locator) {}
-
-  bool diagnoseAsError() override;
-};
-
 } // end namespace constraints
 } // end namespace swift
 

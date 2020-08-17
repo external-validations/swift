@@ -8127,14 +8127,6 @@ ConstraintSystem::simplifyKeyPathConstraint(
     if (keyPathTy->isHole())
       return SolutionKind::Solved;
 
-    // If we have a malformed KeyPathExpr e.g. let _: KeyPath<A, C> = \A
-    // let's record a AllowKeyPathMissingComponent fix.
-    if (keyPath->hasSingleInvalidComponent()) {
-      auto *fix = AllowKeyPathWithoutComponents::create(
-          *this, getConstraintLocator(locator));
-      return recordFix(fix) ? SolutionKind::Error : SolutionKind::Solved;
-    }
-
     // If the root type has been bound to a hole, we cannot infer it.
     if (getFixedTypeRecursive(rootTy, /*wantRValue*/ true)->isHole())
       return SolutionKind::Solved;
@@ -9996,8 +9988,7 @@ ConstraintSystem::SolutionKind ConstraintSystem::simplifyFixConstraint(
   case FixKind::UnwrapOptionalBaseKeyPathApplication:
   case FixKind::AllowCoercionToForceCast:
   case FixKind::SpecifyKeyPathRootType:
-  case FixKind::SpecifyLabelToAssociateTrailingClosure:
-  case FixKind::AllowKeyPathWithoutComponents: {
+  case FixKind::SpecifyLabelToAssociateTrailingClosure: {
     return recordFix(fix) ? SolutionKind::Error : SolutionKind::Solved;
   }
 
